@@ -1,0 +1,30 @@
+
+
+{
+    "itemsPrice":"200",
+    "taxPrice":"130",
+    "shippingPrice":"100",
+    "totalPrice":"100",
+    "orderItems":[
+        {
+       "product":"64c60c785a43a4252531d083",
+        "name":"product1",
+        "price":"1200",
+        "image":"sample image",
+        "quantity":1
+    }
+    ],
+    "shippingInfo":{
+        "address":"risalpur nowshera",
+        "city":"nowshera",
+        "state":"kpk",
+        "country":"pakistan",
+        "pinCode":123654,
+        "phoneNo": 889999
+    },
+    "paymentInfo":{
+        "id":"sample payment info",
+        "status":"succeeded"
+    }
+
+}
