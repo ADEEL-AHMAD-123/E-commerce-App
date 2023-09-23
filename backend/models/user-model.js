@@ -5,11 +5,17 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, "Please Enter Your Name"],
-    maxLength: [30, "Name cannot exceed 30 characters"],
-    minLength: [4, "Name should have more than 4 characters"],
+    required: [true, "Please Enter Your firstName"],
+    maxLength: [30, "First Name cannot exceed 30 characters"],
+    minLength: [4, "First Name should have more than 4 characters"],
+  },
+  lastName: {
+    type: String,
+    required: [true, "Please Enter Your lastName"],
+    maxLength: [30, "Last Name cannot exceed 30 characters"],
+    minLength: [4, "Last Name should have more than 4 characters"],
   },
   email: {
     type: String,
@@ -44,6 +50,9 @@ const userSchema = new mongoose.Schema({
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+
+  // Add a wishlist field that is an array of product IDs
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
 });
 
 userSchema.pre("save", async function (next) {
@@ -62,7 +71,6 @@ userSchema.methods.getJWTToken = function () {
 };
 
 // Compare Password
-
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
@@ -83,5 +91,19 @@ userSchema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
+// Add a method to add a product to the user's wishlist
+userSchema.methods.addToWishlist = function (productId) {
+  if (!this.wishlist.includes(productId)) {
+    this.wishlist.push(productId);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
+// Add a method to remove a product from the user's wishlist
+userSchema.methods.removeFromWishlist = function (productId) {
+  this.wishlist = this.wishlist.filter((id) => id.toString() !== productId.toString());
+  return this.save();
+};
 
 module.exports = mongoose.model("User", userSchema);

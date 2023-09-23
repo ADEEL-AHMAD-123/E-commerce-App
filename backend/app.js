@@ -8,7 +8,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from this origin
+  credentials: true, // Enable credentials (cookies)
+}));
 app.use("/", express.static("uploads"));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
@@ -27,10 +30,12 @@ connectDB();
 const product = require("./routes/productRoute");
 const user = require("./routes/userRoute");
 const order = require("./routes/orderRoute");
+const wishlist = require("./routes/wishlistRoute");
 
-app.use("/api/v1", product);
+app.use("/api/v1", product); 
 app.use("/api/v1", user);
 app.use("/api/v1", order);
+app.use("/api/v1", wishlist);
 // Error handling middleware
 app.use(ErrorHandler);
 

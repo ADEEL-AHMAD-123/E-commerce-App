@@ -72,12 +72,17 @@ const productSchema = mongoose.Schema({
     ref: "User",
     required: false,
   },
+  
+  // Add a field to store the users who have wishlisted this product
+  wishlistedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
 // Create a text index on name, category, and brand fields
-productSchema.index({ name: "text", category: "text"});
+productSchema.index({ name: "text", category: "text" });
 
 module.exports = mongoose.model("Product", productSchema);

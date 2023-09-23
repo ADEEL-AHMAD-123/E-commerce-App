@@ -14,7 +14,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   //   crop: "scale",
   // });
 
-  const { name, email, password } = req.body;
+  const { firstName,lastName, email, password } = req.body;
   let userexist = await User.findOne({ email })
 if(userexist){
   const error = createError(404, "user already exist");
@@ -22,7 +22,7 @@ if(userexist){
   next(error);
 }
   let user = await User.create({
-    name,
+    firstName,lastName,
     email, 
     password,
     avatar: {
