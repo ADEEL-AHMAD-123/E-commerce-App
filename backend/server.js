@@ -11,20 +11,11 @@ process.on("uncaughtException", (err)=>{
         process.exit(1); 
       }); 
 })    
- 
-// config
-if (process.env.NODE_ENV !== "PRODUCTION"){
-    require("dotenv").config({
-        path:"../backend/config/.env"
-    })
-} 
-
-
 
 // Connect Database  
 connectDB()
 
-// create server
+// create server 
 const server = app.listen(8000, () => {
     console.log(
       `Server is running on a port no  http://localhost:8000`

@@ -1,50 +1,45 @@
-class ApiFeatures {
-  constructor(query, queryStr) {
-    this.query = query;
-    this.queryStr = queryStr;
+const applyFilters = (filters) => {
+  const filterCriteria = {};
+
+  // Keyword search (partial match for product name)
+  if (filters.keyword) {
+    const keywordRegex = new RegExp(filters.keyword, 'i'); // Case-insensitive regex
+    filterCriteria.name = { $regex: keywordRegex };
   }
 
-  search() {
-    const keyword = this.queryStr.keyword;
-  
-    if (keyword) {
-      this.query = this.query.find({ $text: { $search: keyword } });
+  // Category search
+  if (filters.category) {
+    filterCriteria.category = filters.category;
+  }
+
+  // Dynamic function to apply gte/lte filters
+  const applyRangeFilter = (field, value) => {
+    if (value && value.gte && value.lte) {
+      const gte = parseFloat(value.gte);
+      const lte = parseFloat(value.lte);
+      if (!isNaN(gte) && !isNaN(lte)) {
+        filterCriteria[field] = { $gte: gte, $lte: lte };
+      }
     }
-  
-    return this;
-  }
-  
-  
+  };
 
-  filter() {
-    const queryCopy = { ...this.queryStr };
-    //   Removing some fields for category
-    const removeFields = ["keyword", "page", "limit"];
+  // Price filter
+  applyRangeFilter('price', filters.price);
 
-    removeFields.forEach((key) => delete queryCopy[key]);
+  // Rating filter
+  applyRangeFilter('rating', filters.rating);
 
-    // Filter For Price and Rating
+  // Add more filters as needed
 
-    let queryStr = JSON.stringify(queryCopy);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
+  return filterCriteria;
+};
 
-    this.query = this.query.find(JSON.parse(queryStr));
-    return this;
-  }
+const getPagination = (page, limit) => {
+  const parsedPage = parseInt(page, 10) || 1;
+  const parsedLimit = parseInt(limit, 10) || 10;
+  const skip = (parsedPage - 1) * parsedLimit;
 
-  pagination(resultPerPage) {
-    const currentPage = Number(this.queryStr.page) || 1;
+  return { page: parsedPage, limit: parsedLimit, skip };
+};
 
-    const skip = resultPerPage * (currentPage - 1);
-
-    this.query = this.query.limit(resultPerPage).skip(skip);
-    return this;
-  }
-
-  // Use exec() to execute the query and get the results as a Promise
-  async exec() {
-    return await this.query.exec();
-  }
-}
-
-module.exports = ApiFeatures;
+module.exports = { applyFilters, getPagination };

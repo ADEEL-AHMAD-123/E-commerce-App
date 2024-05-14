@@ -3,40 +3,54 @@ const ErrorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require('path');
-const app = express();
+const cloudinary = require('cloudinary').v2;
+const Multer = require('multer');
+const catchAsyncErrors = require("./middleware/catchAsyncErrors"); // Import your catchAsyncErrors middleware
+const Product = require("./models/productModel"); // Import your Product model
 
+const app = express();
+require("dotenv").config();
+
+// Body parsing middleware
 app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin
-  credentials: true, // Enable credentials (cookies)
-}));
-app.use("/", express.static("uploads"));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
-// Config
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config({
-    path: path.join('./config/.env', "config", ".env")
-  });
-}
+// Cookie parsing middleware
+app.use(cookieParser());
 
-// Connect Database
+// CORS middleware
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
+// Serve static files from 'uploads' directory
+app.use("/", express.static("uploads"));
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Database connection
 const connectDB = require("./db/db-connection");
 connectDB();
 
-// Import routes
+// Routes
 const product = require("./routes/productRoute");
 const user = require("./routes/userRoute");
 const order = require("./routes/orderRoute");
-const wishlist = require("./routes/wishlistRoute");
+const payment = require("./routes/paymentRoute");
 
-app.use("/api/v1", product); 
+app.use("/api/v1", product);
 app.use("/api/v1", user);
 app.use("/api/v1", order);
-app.use("/api/v1", wishlist);
+app.use("/api/v1", payment);
+
 // Error handling middleware
 app.use(ErrorHandler);
 
+// Export the app
 module.exports = app;

@@ -1,46 +1,46 @@
 const express = require("express");
+const router = express.Router();
 const {
-    getAllProducts,
-    createProduct,
-    updateProduct,
-    deleteProduct,
-    getProductDetails,
-    createProductReview,
-    getProductReviews,
-    deleteReview,
-    getAdminProducts,
+  getAllProducts,
+  createProduct, 
+  updateProduct,
+  deleteProduct,
+  getProductDetails,
+  createProductReview,
+  getProductReviews,
+  deleteReview,
+  getAdminProducts,                            
 } = require("../controllers/productController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+const upload = require('../middleware/multerConfig'); // Import the new Multer config
 
-const router = express.Router();
-router
-  .route("/admin/products")
+// Admin Routes
+router.route("/admin/products")
   .get(isAuthenticatedUser, authorizeRoles("admin"), getAdminProducts);
 
-router.route("/products").get(getAllProducts);
+router.post("/admin/product/new",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  upload.array('images', 5), // Handle file uploads using multer
+  createProduct
+);
 
-router
-  .route("/admin/product/new")
-  .post(isAuthenticatedUser, authorizeRoles("admin"), createProduct);
-
-router
-  .route("/admin/product/:id")
-  .put(isAuthenticatedUser, authorizeRoles("admin"), updateProduct);
-
-router
-  .route("/admin/product/:id")
+router.route("/admin/product/:id")
+  .put(isAuthenticatedUser, authorizeRoles("admin"), updateProduct)
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteProduct);
 
-router.route("/Product/:id").get(getProductDetails);
+// Public Routes
+router.route("/products")
+  .get(getAllProducts);
 
-router.route("/review").put(isAuthenticatedUser, createProductReview);
+router.route("/Product/:id")                   
+  .get(getProductDetails);
 
-router
-  .route("/reviews")
+router.route("/review")
+  .put(isAuthenticatedUser, createProductReview);
+
+router.route("/reviews")
   .get(getProductReviews)
-
-  router
-  .route("/reviews")
   .delete(isAuthenticatedUser, deleteReview);
 
 module.exports = router;
