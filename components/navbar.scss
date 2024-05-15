@@ -1,0 +1,178 @@
+/* Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #243744;
+
+  padding: 10px 80px;
+  color: #fff;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  margin-left: 20px;
+}
+.close-icon{
+  display: none;
+}
+.navbar-links a {
+  text-decoration: none;
+  color: #fff;
+}
+.navbar-links a:hover {
+  color: #fcc179;
+ 
+}
+
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 3px 0;
+}
+
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: absolute;
+    top: 23.5%;
+    left: 48%;
+    z-index: 2;
+    background-color: #243744;
+
+    width: 50%;
+    padding: 10px;
+  }
+
+  .navbar.open .navbar-links {
+    display: flex;
+
+  }
+  .navbar-links li {
+    margin-bottom: 20px;
+  }
+.close-icon{
+
+  display: inline;
+}
+  .navbar-toggle {
+    display: block;
+  }
+  .navbar {
+    padding: 10px ;
+  }
+  .selection {
+    width: 120px !important; /* Set a fixed width */
+    font-size: 10px !important;
+    // padding: 5px !important;
+  }
+  .options{
+    font-size: 10px;
+  }
+}
+/* Navbar.css */
+/* ... (Previous styles) */
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.custom-select {
+  display: inline-block;
+  position: relative;
+}
+
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.selection {
+  padding: 8px;
+  border: 1px solid white;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 180px; /* Set a fixed width */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 14px;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #000; /* Adjust the color as needed */
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust the position as needed */
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select-wrapper.open .arrow {
+  transform: rotate(-135deg);
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #243744;
+
+
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  z-index: 1;
+}
+
+.option {
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.option:hover {
+  color: #fcc179;
+  background-color: #243744;
+
+}
+
+/* Adjust the dropdown appearance */
+.selection::-ms-expand {
+  display: none; /* Remove default arrow in IE */
+}
+.sorting .icon {
+  cursor: pointer;
+  color: white;
+  margin-left: 20px;
+}
+#topbar {
+  display: flex;
+}
